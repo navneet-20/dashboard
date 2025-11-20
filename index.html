@@ -256,6 +256,8 @@
         const logoutButton = document.getElementById('logoutButton');
         const greeting = document.getElementById('greeting');
         const loginMessage = document.getElementById('loginMessage');
+        // Get the Submit button element for mobile-optimized state management
+        const submitButton = loginModal.querySelector('button[onclick="handleLogin()"]'); 
         let isLoggedIn = false;
 
         // --- Core Hashing Function (SHA-256) ---
@@ -271,6 +273,7 @@
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
             // Convert the ArrayBuffer to a hex string
             const hashArray = Array.from(new Uint8Array(hashBuffer));
+            // Ensure hex values are zero-padded to two digits
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             return hashHex;
         }
@@ -310,20 +313,23 @@
         }
 
         /**
-         * Handles the login attempt from the modal (ASYNC).
+         * Handles the login attempt from the modal (ASYNC and MOBILE-OPTIMIZED).
          */
         async function handleLogin() {
             const usernameInput = document.getElementById('username').value;
             const passwordInput = document.getElementById('password').value;
             
-            loginMessage.textContent = 'Processing...'; // Show temporary message
+            // 1. Temporarily disable the button to prevent multiple clicks while hashing
+            submitButton.disabled = true;
+            loginMessage.textContent = 'Verifying credentials...'; 
 
             if (usernameInput !== CORRECT_USERNAME) {
                 loginMessage.textContent = 'Invalid username or password.';
+                submitButton.disabled = false;
                 return;
             }
 
-            // Hash the user's entered password before comparison
+            // 2. Hash the user's entered password before comparison
             try {
                 const inputHash = await sha256(passwordInput);
 
@@ -338,8 +344,12 @@
                     loginMessage.textContent = 'Invalid username or password.';
                 }
             } catch (error) {
+                // If hashing fails (e.g., severe browser error)
                 console.error("Hashing failed:", error);
                 loginMessage.textContent = 'An error occurred during login.';
+            } finally {
+                // 3. Re-enable the button regardless of success or failure
+                submitButton.disabled = false;
             }
         }
 
