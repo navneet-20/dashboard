@@ -247,7 +247,9 @@
     <script>
         // --- Constants ---
         const CORRECT_USERNAME = 'navneet.kumar';
-        const CORRECT_PASSWORD = 'navneet.kumar';
+        // Password hash for 'navneet.kumar' generated using SHA-256
+        const CORRECT_PASSWORD_HASH = 'b95d98894f6c4be060b9c3f508a8e13222e411b402840656094602c39e240213';
+        
         const hiddenTool = document.getElementById('hiddenTool');
         const loginModal = document.getElementById('loginModal');
         const loginButton = document.getElementById('loginButton');
@@ -256,8 +258,22 @@
         const loginMessage = document.getElementById('loginMessage');
         let isLoggedIn = false;
 
-        // --- Initial Setup ---
-        updateUI();
+        // --- Core Hashing Function (SHA-256) ---
+        /**
+         * Hashes the given string using SHA-256 and returns a hex string.
+         * @param {string} message The password string to hash.
+         * @returns {Promise<string>} The SHA-256 hash as a hex string.
+         */
+        async function sha256(message) {
+            // Encode the string as a Uint8Array
+            const msgUint8 = new TextEncoder().encode(message);
+            // Hash the message
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            // Convert the ArrayBuffer to a hex string
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
         // --- Functions ---
 
@@ -294,21 +310,36 @@
         }
 
         /**
-         * Handles the login attempt from the modal.
+         * Handles the login attempt from the modal (ASYNC).
          */
-        function handleLogin() {
+        async function handleLogin() {
             const usernameInput = document.getElementById('username').value;
             const passwordInput = document.getElementById('password').value;
+            
+            loginMessage.textContent = 'Processing...'; // Show temporary message
 
-            if (usernameInput === CORRECT_USERNAME && passwordInput === CORRECT_PASSWORD) {
-                isLoggedIn = true;
-                loginModal.style.display = 'none'; // Close modal
-                document.getElementById('username').value = ''; // Clear inputs
-                document.getElementById('password').value = '';
-                loginMessage.textContent = ''; // Clear error message
-                updateUI();
-            } else {
+            if (usernameInput !== CORRECT_USERNAME) {
                 loginMessage.textContent = 'Invalid username or password.';
+                return;
+            }
+
+            // Hash the user's entered password before comparison
+            try {
+                const inputHash = await sha256(passwordInput);
+
+                if (inputHash === CORRECT_PASSWORD_HASH) {
+                    isLoggedIn = true;
+                    loginModal.style.display = 'none'; // Close modal
+                    document.getElementById('username').value = ''; // Clear inputs
+                    document.getElementById('password').value = '';
+                    loginMessage.textContent = ''; // Clear error message
+                    updateUI();
+                } else {
+                    loginMessage.textContent = 'Invalid username or password.';
+                }
+            } catch (error) {
+                console.error("Hashing failed:", error);
+                loginMessage.textContent = 'An error occurred during login.';
             }
         }
 
@@ -320,7 +351,8 @@
             updateUI();
         }
 
-        // --- Event Listeners ---
+        // --- Initial Setup and Event Listeners ---
+        updateUI();
 
         // Show the login modal when the Login button is clicked
         loginButton.addEventListener('click', () => {
