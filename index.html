@@ -6,73 +6,26 @@
     <title>Navneet's Tools Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* --- General Styling and Background --- */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f2f5; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        /* --- Dashboard Container --- */
-        .dashboard-container {
-            width: 90%;
-            max-width: 800px;
-            background-color: #ffffff;
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            transition: all 0.3s ease-in-out;
-        }
-
-        /* --- Header Section --- */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
+        /* (CSS STYLES OMITTED FOR BREVITY) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .dashboard-container { width: 90%; max-width: 800px; background-color: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); padding: 30px; transition: all 0.3s ease-in-out; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
         .welcome-text h1 { color: #333; font-size: 2.5em; margin: 0; }
         .welcome-text h2 { color: #555; font-size: 1.2em; font-weight: 300; margin: 5px 0 0 0; }
         .login-section { display: flex; align-items: center; }
         #loginButton, #logoutButton { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
         #loginButton:hover, #logoutButton:hover { background-color: #0056b3; }
         #logoutButton { background-color: #dc3545; display: none; }
-
-        /* --- Modal Styling --- */
-        .modal { 
-            display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; 
-        }
-        .modal-content { 
-            background-color: #fff; padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
-        }
-        .modal-content input { 
-            width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
-        }
-        .modal-content button { 
-            background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; 
-        }
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
+        .modal-content { background-color: #fff; padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .modal-content input { width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .modal-content button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; }
         .modal-content button:hover { background-color: #1e7e34; }
         .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
         .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
-
-        /* --- Tools Grid --- */
-        .tools-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; padding-top: 10px; 
-        }
-        .tool-card { 
-            background-color: #f7f9fc; padding: 20px 10px; text-align: center; border-radius: 15px; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; 
-        }
-        .tool-card:hover { 
-            transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background-color: #e6f0ff; 
-        }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; padding-top: 10px; }
+        .tool-card { background-color: #f7f9fc; padding: 20px 10px; text-align: center; border-radius: 15px; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background-color: #e6f0ff; }
         .tool-icon { font-size: 2.5em; margin-bottom: 10px; color: #007bff; }
         .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; }
         .hidden-tool { display: none; }
@@ -92,39 +45,26 @@
             </div>
         </div>
         <div class="tools-grid">
-
             <a href="https://navneet-20.github.io/Astro-Dash/" target="_blank" class="tool-card">
-                <i class="fas fa-rocket tool-icon"></i>
-                <span class="tool-name">Astro-Dash Game</span>
+                <i class="fas fa-rocket tool-icon"></i><span class="tool-name">Astro-Dash Game</span>
             </a>
-
             <a href="https://navneet-20.github.io/screen-saver-studio/" target="_blank" class="tool-card">
-                <i class="fas fa-paint-brush tool-icon"></i>
-                <span class="tool-name">screen-saver-studio</span>
+                <i class="fas fa-paint-brush tool-icon"></i><span class="tool-name">screen-saver-studio</span>
             </a>
-
             <a href="https://navneet-20.github.io/ice-breaker/" target="_blank" class="tool-card">
-                <i class="fas fa-user-friends tool-icon"></i>
-                <span class="tool-name">ice-breaker</span>
+                <i class="fas fa-user-friends tool-icon"></i><span class="tool-name">ice-breaker</span>
             </a>
-
             <a href="https://navneet-20.github.io/home-loan-calculator-with-repo-rate/" target="_blank" class="tool-card">
-                <i class="fas fa-hand-holding-usd tool-icon"></i>
-                <span class="tool-name">Home Loan Calc (Repo)</span>
+                <i class="fas fa-hand-holding-usd tool-icon"></i><span class="tool-name">Home Loan Calc (Repo)</span>
             </a>
-
             <a href="https://navneet-20.github.io/home-loan-calculator-with-prepayment/" target="_blank" class="tool-card">
-                <i class="fas fa-house-user tool-icon"></i>
-                <span class="tool-name">Home Loan Calc (Prepay)</span>
+                <i class="fas fa-house-user tool-icon"></i><span class="tool-name">Home Loan Calc (Prepay)</span>
             </a>
-
             <a href="https://navneet-20.github.io/happybirthday/" target="_blank" class="tool-card hidden-tool" id="hiddenTool">
-                <i class="fas fa-birthday-cake tool-icon" style="color: #ff69b4;"></i>
-                <span class="tool-name">Happy Birthday</span>
+                <i class="fas fa-birthday-cake tool-icon" style="color: #ff69b4;"></i><span class="tool-name">Happy Birthday</span>
             </a>
-
         </div>
-        </div>
+    </div>
 
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -136,11 +76,12 @@
             <p id="loginMessage" style="color: red; text-align: center; margin-top: 10px;"></p>
         </div>
     </div>
+
     <script>
-        // --- Security Constants: Password Obscured with ASCII ---
+        // --- Constants (Plain Text for Maximum Compatibility) ---
         const CORRECT_USERNAME = 'navneet.kumar';
-        // Password 'h2ixdn' represented as an array of ASCII codes.
-        const ASCII_TOKEN = [104, 50, 105, 120, 100, 110];
+        // Using the password directly, labeled as a SECURE_TOKEN for obscurity
+        const SECURE_TOKEN = 'h2ixdn'; 
 
         const hiddenTool = document.getElementById('hiddenTool');
         const loginModal = document.getElementById('loginModal');
@@ -176,34 +117,18 @@
             }
         }
 
-        /** Handles the login attempt using reliable ASCII code comparison. */
+        /** * Handles the login attempt using guaranteed string comparison.
+         * This method has the highest compatibility but lowest security (password is visible in source code).
+         */
         function handleLogin() {
+            // .trim() removes any leading/trailing spaces
             const usernameInput = document.getElementById('username').value.trim();
             const passwordInput = document.getElementById('password').value.trim();
             
             loginMessage.textContent = 'Verifying credentials...'; 
 
-            if (usernameInput !== CORRECT_USERNAME) {
-                loginMessage.textContent = 'Invalid username or password.';
-                return;
-            }
-
-            // 1. Check if the length matches first
-            if (passwordInput.length !== ASCII_TOKEN.length) {
-                loginMessage.textContent = 'Invalid username or password.';
-                return;
-            }
-
-            // 2. Convert the input string to an array of ASCII codes for comparison
-            let inputMatches = true;
-            for (let i = 0; i < passwordInput.length; i++) {
-                if (passwordInput.charCodeAt(i) !== ASCII_TOKEN[i]) {
-                    inputMatches = false;
-                    break; 
-                }
-            }
-
-            if (inputMatches) {
+            // Simple, reliable string comparison
+            if (usernameInput === CORRECT_USERNAME && passwordInput === SECURE_TOKEN) {
                 isLoggedIn = true;
                 loginModal.style.display = 'none';
                 document.getElementById('username').value = '';
@@ -211,6 +136,7 @@
                 loginMessage.textContent = '';
                 updateUI();
             } else {
+                // Return a generic error message regardless of whether username or password failed
                 loginMessage.textContent = 'Invalid username or password.';
             }
         }
