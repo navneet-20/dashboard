@@ -6,30 +6,26 @@
     <title>Navneet's Tools Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* --- General Styling and Background --- */
+        /* (CSS STYLES REMAINS THE SAME - OMITTED FOR BREVITY) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f2f5; /* Light grey background */
+            background-color: #f0f2f5; 
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
-
-        /* --- Dashboard Container --- */
         .dashboard-container {
             width: 90%;
             max-width: 800px;
             background-color: #ffffff;
-            border-radius: 20px; /* Sleek round corners */
+            border-radius: 20px; 
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             padding: 30px;
             transition: all 0.3s ease-in-out;
         }
-
-        /* --- Header Section --- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -38,152 +34,25 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
-
-        .welcome-text h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin: 0;
-        }
-
-        .welcome-text h2 {
-            color: #555;
-            font-size: 1.2em;
-            font-weight: 300;
-            margin: 5px 0 0 0;
-        }
-
-        /* --- Login Button and Form --- */
-        .login-section {
-            display: flex;
-            align-items: center;
-        }
-
-        #loginButton, #logoutButton {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        #loginButton:hover, #logoutButton:hover {
-            background-color: #0056b3;
-        }
-
-        #logoutButton {
-            background-color: #dc3545;
-            display: none; /* Hidden by default */
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 15px;
-            width: 300px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0 15px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-
-        .modal-content button {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .modal-content button:hover {
-            background-color: #1e7e34;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* --- Tools Grid --- */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 20px;
-            padding-top: 10px;
-        }
-
-        .tool-card {
-            background-color: #f7f9fc;
-            padding: 20px 10px;
-            text-align: center;
-            border-radius: 15px;
-            text-decoration: none;
-            color: #333;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            background-color: #e6f0ff; /* Light blue on hover */
-        }
-
-        .tool-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: #007bff;
-        }
-
-        .tool-name {
-            font-size: 0.9em;
-            font-weight: 600;
-            word-wrap: break-word;
-        }
-
-        /* --- Hidden Tools Class --- */
-        .hidden-tool {
-            display: none; /* Hide hidden tools by default */
-        }
+        .welcome-text h1 { color: #333; font-size: 2.5em; margin: 0; }
+        .welcome-text h2 { color: #555; font-size: 1.2em; font-weight: 300; margin: 5px 0 0 0; }
+        .login-section { display: flex; align-items: center; }
+        #loginButton, #logoutButton { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
+        #loginButton:hover, #logoutButton:hover { background-color: #0056b3; }
+        #logoutButton { background-color: #dc3545; display: none; }
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
+        .modal-content { background-color: #fff; padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .modal-content input { width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .modal-content button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; }
+        .modal-content button:hover { background-color: #1e7e34; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; padding-top: 10px; }
+        .tool-card { background-color: #f7f9fc; padding: 20px 10px; text-align: center; border-radius: 15px; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background-color: #e6f0ff; }
+        .tool-icon { font-size: 2.5em; margin-bottom: 10px; color: #007bff; }
+        .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; }
+        .hidden-tool { display: none; }
     </style>
 </head>
 <body>
@@ -246,9 +115,10 @@
     </div>
     <script>
         // --- Constants ---
+        // USERNAME remains the same
         const CORRECT_USERNAME = 'navneet.kumar';
-        // WARNING: Using the plain text password for maximum compatibility across devices.
-        const PLAIN_TEXT_PASSWORD = 'navneet.kumar'; 
+        // NEW PASSWORD is set here
+        const PLAIN_TEXT_PASSWORD = 'h2ixdn'; 
         
         const hiddenTool = document.getElementById('hiddenTool');
         const loginModal = document.getElementById('loginModal');
@@ -293,10 +163,10 @@
         }
 
         /**
-         * Handles the login attempt using plain text comparison (temporary fix for mobile compatibility).
+         * Handles the login attempt using plain text comparison.
          */
         function handleLogin() {
-            // .trim() removes any leading/trailing spaces accidentally typed on mobile keyboards
+            // .trim() removes any leading/trailing spaces accidentally typed
             const usernameInput = document.getElementById('username').value.trim();
             const passwordInput = document.getElementById('password').value.trim();
             
