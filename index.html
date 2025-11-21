@@ -137,33 +137,18 @@
         </div>
     </div>
     <script>
-        // --- Constants ---
+        // --- Security Constants: Password Obscured with ASCII ---
         const CORRECT_USERNAME = 'navneet.kumar';
-        // Password hash for 'h2ixdn' generated using SHA-256
-        const CORRECT_PASSWORD_HASH = '439b1a582c3f8f149594f87498c8869b0d6f461e7a4f78330758410940003004';
-        
+        // Password 'h2ixdn' represented as an array of ASCII codes.
+        const ASCII_TOKEN = [104, 50, 105, 120, 100, 110];
+
         const hiddenTool = document.getElementById('hiddenTool');
         const loginModal = document.getElementById('loginModal');
         const loginButton = document.getElementById('loginButton');
         const logoutButton = document.getElementById('logoutButton');
         const greeting = document.getElementById('greeting');
         const loginMessage = document.getElementById('loginMessage');
-        const submitButton = loginModal.querySelector('button[onclick="handleLogin()"]'); 
         let isLoggedIn = false;
-
-        // --- Core Hashing Function (SHA-256) ---
-        /**
-         * Hashes the given string using SHA-256 and returns a hex string.
-         * @param {string} message The password string to hash.
-         * @returns {Promise<string>} The SHA-256 hash as a hex string.
-         */
-        async function sha256(message) {
-            const msgUint8 = new TextEncoder().encode(message.trim());
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
-        }
 
         // --- Functions ---
 
@@ -171,13 +156,9 @@
         function setGreeting() {
             const hour = new Date().getHours();
             let text = "Hello!";
-            if (hour < 12) {
-                text = "Good Morning!";
-            } else if (hour < 18) {
-                text = "Good Afternoon!";
-            } else {
-                text = "Good Evening!";
-            }
+            if (hour < 12) { text = "Good Morning!"; } 
+            else if (hour < 18) { text = "Good Afternoon!"; } 
+            else { text = "Good Evening!"; }
             greeting.textContent = text;
         }
         setGreeting(); 
@@ -195,38 +176,42 @@
             }
         }
 
-        /** Handles the login attempt from the modal (ASYNC - HASHED). */
-        async function handleLogin() {
+        /** Handles the login attempt using reliable ASCII code comparison. */
+        function handleLogin() {
             const usernameInput = document.getElementById('username').value.trim();
             const passwordInput = document.getElementById('password').value.trim();
             
-            submitButton.disabled = true;
             loginMessage.textContent = 'Verifying credentials...'; 
 
             if (usernameInput !== CORRECT_USERNAME) {
                 loginMessage.textContent = 'Invalid username or password.';
-                submitButton.disabled = false;
                 return;
             }
 
-            try {
-                const inputHash = await sha256(passwordInput);
+            // 1. Check if the length matches first
+            if (passwordInput.length !== ASCII_TOKEN.length) {
+                loginMessage.textContent = 'Invalid username or password.';
+                return;
+            }
 
-                if (inputHash === CORRECT_PASSWORD_HASH) {
-                    isLoggedIn = true;
-                    loginModal.style.display = 'none';
-                    document.getElementById('username').value = '';
-                    document.getElementById('password').value = '';
-                    loginMessage.textContent = '';
-                    updateUI();
-                } else {
-                    loginMessage.textContent = 'Invalid username or password.';
+            // 2. Convert the input string to an array of ASCII codes for comparison
+            let inputMatches = true;
+            for (let i = 0; i < passwordInput.length; i++) {
+                if (passwordInput.charCodeAt(i) !== ASCII_TOKEN[i]) {
+                    inputMatches = false;
+                    break; 
                 }
-            } catch (error) {
-                console.error("Hashing failed:", error);
-                loginMessage.textContent = 'An error occurred during login. (Check browser compatibility)';
-            } finally {
-                submitButton.disabled = false;
+            }
+
+            if (inputMatches) {
+                isLoggedIn = true;
+                loginModal.style.display = 'none';
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                loginMessage.textContent = '';
+                updateUI();
+            } else {
+                loginMessage.textContent = 'Invalid username or password.';
             }
         }
 
