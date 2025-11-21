@@ -44,6 +44,7 @@
                 <button id="logoutButton">Logout</button>
             </div>
         </div>
+
         <div class="tools-grid">
             <a href="https://navneet-20.github.io/Astro-Dash/" target="_blank" class="tool-card">
                 <i class="fas fa-rocket tool-icon"></i><span class="tool-name">Astro-Dash Game</span>
@@ -78,91 +79,73 @@
     </div>
 
     <script>
-        // --- Constants (Plain Text for Maximum Compatibility) ---
-        const CORRECT_USERNAME = 'navneet.kumar';
-        // Using the password directly, labeled as a SECURE_TOKEN for obscurity
-        const SECURE_TOKEN = 'h2ixdn'; 
+        const CORRECT_USERNAME = "navneet.kumar";
+        
+        /* Base64-encoded password "h2ixdn" */
+        const ENCODED_PASS = "aDJpeGRu";
 
-        const hiddenTool = document.getElementById('hiddenTool');
-        const loginModal = document.getElementById('loginModal');
-        const loginButton = document.getElementById('loginButton');
-        const logoutButton = document.getElementById('logoutButton');
-        const greeting = document.getElementById('greeting');
-        const loginMessage = document.getElementById('loginMessage');
+        const hiddenTool = document.getElementById("hiddenTool");
+        const loginModal = document.getElementById("loginModal");
+        const loginButton = document.getElementById("loginButton");
+        const logoutButton = document.getElementById("logoutButton");
+        const greeting = document.getElementById("greeting");
+        const loginMessage = document.getElementById("loginMessage");
+
         let isLoggedIn = false;
 
-        // --- Functions ---
-
-        /** Sets the greeting based on the current time of day. */
         function setGreeting() {
             const hour = new Date().getHours();
-            let text = "Hello!";
-            if (hour < 12) { text = "Good Morning!"; } 
-            else if (hour < 18) { text = "Good Afternoon!"; } 
-            else { text = "Good Evening!"; }
-            greeting.textContent = text;
+            greeting.textContent =
+                hour < 12 ? "Good Morning!" :
+                hour < 18 ? "Good Afternoon!" :
+                "Good Evening!";
         }
-        setGreeting(); 
+        setGreeting();
 
-        /** Updates the UI elements based on the login status. */
         function updateUI() {
-            if (isLoggedIn) {
-                hiddenTool.style.display = 'flex';
-                loginButton.style.display = 'none';
-                logoutButton.style.display = 'block';
-            } else {
-                hiddenTool.style.display = 'none';
-                loginButton.style.display = 'block';
-                logoutButton.style.display = 'none';
-            }
+            hiddenTool.style.display = isLoggedIn ? "flex" : "none";
+            loginButton.style.display = isLoggedIn ? "none" : "block";
+            logoutButton.style.display = isLoggedIn ? "block" : "none";
         }
 
-        /** * Handles the login attempt using guaranteed string comparison.
-         * This method has the highest compatibility but lowest security (password is visible in source code).
-         */
         function handleLogin() {
-            // .trim() removes any leading/trailing spaces
-            const usernameInput = document.getElementById('username').value.trim();
-            const passwordInput = document.getElementById('password').value.trim();
-            
-            loginMessage.textContent = 'Verifying credentials...'; 
+            const usernameInput = document.getElementById("username").value.trim();
+            const passwordInput = document.getElementById("password").value.trim();
 
-            // Simple, reliable string comparison
-            if (usernameInput === CORRECT_USERNAME && passwordInput === SECURE_TOKEN) {
+            loginMessage.textContent = "Verifying...";
+
+            const encodedInput = btoa(passwordInput);
+
+            if (usernameInput === CORRECT_USERNAME && encodedInput === ENCODED_PASS) {
                 isLoggedIn = true;
-                loginModal.style.display = 'none';
-                document.getElementById('username').value = '';
-                document.getElementById('password').value = '';
-                loginMessage.textContent = '';
+                loginModal.style.display = "none";
+                loginMessage.textContent = "";
                 updateUI();
             } else {
-                // Return a generic error message regardless of whether username or password failed
-                loginMessage.textContent = 'Invalid username or password.';
+                loginMessage.textContent = "Invalid username or password.";
             }
         }
 
-        /** Handles the logout process. */
         function handleLogout() {
             isLoggedIn = false;
             updateUI();
         }
 
-        // --- Initial Setup and Event Listeners ---
-        updateUI();
-
-        loginButton.addEventListener('click', () => {
-            loginModal.style.display = 'flex';
-            loginMessage.textContent = '';
+        loginButton.addEventListener("click", () => {
+            loginModal.style.display = "flex";
+            loginMessage.textContent = "";
         });
 
-        logoutButton.addEventListener('click', handleLogout);
+        logoutButton.addEventListener("click", handleLogout);
 
-        window.addEventListener('click', (event) => {
+        window.addEventListener("click", (event) => {
             if (event.target === loginModal) {
-                loginModal.style.display = 'none';
-                loginMessage.textContent = '';
+                loginModal.style.display = "none";
+                loginMessage.textContent = "";
             }
         });
+
+        updateUI();
     </script>
 </body>
 </html>
