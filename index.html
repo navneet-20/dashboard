@@ -6,7 +6,7 @@
     <title>Navneet's Tools Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* (CSS STYLES REMAINS THE SAME - OMITTED FOR BREVITY) */
+        /* --- General Styling and Background --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -17,6 +17,8 @@
             align-items: center;
             min-height: 100vh;
         }
+
+        /* --- Dashboard Container --- */
         .dashboard-container {
             width: 90%;
             max-width: 800px;
@@ -26,6 +28,8 @@
             padding: 30px;
             transition: all 0.3s ease-in-out;
         }
+
+        /* --- Header Section --- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -34,22 +38,41 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
+
         .welcome-text h1 { color: #333; font-size: 2.5em; margin: 0; }
         .welcome-text h2 { color: #555; font-size: 1.2em; font-weight: 300; margin: 5px 0 0 0; }
         .login-section { display: flex; align-items: center; }
         #loginButton, #logoutButton { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
         #loginButton:hover, #logoutButton:hover { background-color: #0056b3; }
         #logoutButton { background-color: #dc3545; display: none; }
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
-        .modal-content { background-color: #fff; padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
-        .modal-content input { width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
-        .modal-content button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; }
+
+        /* --- Modal Styling --- */
+        .modal { 
+            display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; 
+        }
+        .modal-content { 
+            background-color: #fff; padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+        }
+        .modal-content input { 
+            width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; 
+        }
+        .modal-content button { 
+            background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; 
+        }
         .modal-content button:hover { background-color: #1e7e34; }
         .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
         .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; padding-top: 10px; }
-        .tool-card { background-color: #f7f9fc; padding: 20px 10px; text-align: center; border-radius: 15px; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background-color: #e6f0ff; }
+
+        /* --- Tools Grid --- */
+        .tools-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; padding-top: 10px; 
+        }
+        .tool-card { 
+            background-color: #f7f9fc; padding: 20px 10px; text-align: center; border-radius: 15px; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        }
+        .tool-card:hover { 
+            transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background-color: #e6f0ff; 
+        }
         .tool-icon { font-size: 2.5em; margin-bottom: 10px; color: #007bff; }
         .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; }
         .hidden-tool { display: none; }
@@ -115,10 +138,9 @@
     </div>
     <script>
         // --- Constants ---
-        // USERNAME remains the same
         const CORRECT_USERNAME = 'navneet.kumar';
-        // NEW PASSWORD is set here
-        const PLAIN_TEXT_PASSWORD = 'h2ixdn'; 
+        // Password hash for 'h2ixdn' generated using SHA-256
+        const CORRECT_PASSWORD_HASH = '439b1a582c3f8f149594f87498c8869b0d6f461e7a4f78330758410940003004';
         
         const hiddenTool = document.getElementById('hiddenTool');
         const loginModal = document.getElementById('loginModal');
@@ -126,13 +148,26 @@
         const logoutButton = document.getElementById('logoutButton');
         const greeting = document.getElementById('greeting');
         const loginMessage = document.getElementById('loginMessage');
+        const submitButton = loginModal.querySelector('button[onclick="handleLogin()"]'); 
         let isLoggedIn = false;
+
+        // --- Core Hashing Function (SHA-256) ---
+        /**
+         * Hashes the given string using SHA-256 and returns a hex string.
+         * @param {string} message The password string to hash.
+         * @returns {Promise<string>} The SHA-256 hash as a hex string.
+         */
+        async function sha256(message) {
+            const msgUint8 = new TextEncoder().encode(message.trim());
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
 
         // --- Functions ---
 
-        /**
-         * Sets the greeting based on the current time of day.
-         */
+        /** Sets the greeting based on the current time of day. */
         function setGreeting() {
             const hour = new Date().getHours();
             let text = "Hello!";
@@ -145,48 +180,57 @@
             }
             greeting.textContent = text;
         }
-        setGreeting(); // Call on load
+        setGreeting(); 
 
-        /**
-         * Updates the UI elements based on the login status.
-         */
+        /** Updates the UI elements based on the login status. */
         function updateUI() {
             if (isLoggedIn) {
-                hiddenTool.style.display = 'flex'; // Show hidden tool
-                loginButton.style.display = 'none'; // Hide login button
-                logoutButton.style.display = 'block'; // Show logout button
+                hiddenTool.style.display = 'flex';
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'block';
             } else {
-                hiddenTool.style.display = 'none'; // Hide hidden tool
-                loginButton.style.display = 'block'; // Show login button
-                logoutButton.style.display = 'none'; // Hide logout button
+                hiddenTool.style.display = 'none';
+                loginButton.style.display = 'block';
+                logoutButton.style.display = 'none';
             }
         }
 
-        /**
-         * Handles the login attempt using plain text comparison.
-         */
-        function handleLogin() {
-            // .trim() removes any leading/trailing spaces accidentally typed
+        /** Handles the login attempt from the modal (ASYNC - HASHED). */
+        async function handleLogin() {
             const usernameInput = document.getElementById('username').value.trim();
             const passwordInput = document.getElementById('password').value.trim();
             
+            submitButton.disabled = true;
             loginMessage.textContent = 'Verifying credentials...'; 
 
-            if (usernameInput === CORRECT_USERNAME && passwordInput === PLAIN_TEXT_PASSWORD) {
-                isLoggedIn = true;
-                loginModal.style.display = 'none'; // Close modal
-                document.getElementById('username').value = ''; // Clear inputs
-                document.getElementById('password').value = '';
-                loginMessage.textContent = ''; // Clear error message
-                updateUI();
-            } else {
+            if (usernameInput !== CORRECT_USERNAME) {
                 loginMessage.textContent = 'Invalid username or password.';
+                submitButton.disabled = false;
+                return;
+            }
+
+            try {
+                const inputHash = await sha256(passwordInput);
+
+                if (inputHash === CORRECT_PASSWORD_HASH) {
+                    isLoggedIn = true;
+                    loginModal.style.display = 'none';
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                    loginMessage.textContent = '';
+                    updateUI();
+                } else {
+                    loginMessage.textContent = 'Invalid username or password.';
+                }
+            } catch (error) {
+                console.error("Hashing failed:", error);
+                loginMessage.textContent = 'An error occurred during login. (Check browser compatibility)';
+            } finally {
+                submitButton.disabled = false;
             }
         }
 
-        /**
-         * Handles the logout process.
-         */
+        /** Handles the logout process. */
         function handleLogout() {
             isLoggedIn = false;
             updateUI();
@@ -195,23 +239,19 @@
         // --- Initial Setup and Event Listeners ---
         updateUI();
 
-        // Show the login modal when the Login button is clicked
         loginButton.addEventListener('click', () => {
             loginModal.style.display = 'flex';
-            loginMessage.textContent = ''; // Clear previous error
+            loginMessage.textContent = '';
         });
 
-        // Handle logout when the Logout button is clicked
         logoutButton.addEventListener('click', handleLogout);
 
-        // Close the modal if the user clicks anywhere outside of it
         window.addEventListener('click', (event) => {
             if (event.target === loginModal) {
                 loginModal.style.display = 'none';
-                loginMessage.textContent = ''; // Clear error message
+                loginMessage.textContent = '';
             }
         });
-
     </script>
 </body>
 </html>
