@@ -16,7 +16,7 @@
             --card-hover-bg: #e6f0ff;
             --border-color: #eee;
             --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --icon-default-color: #007bff; /* Fallback/Default Blue */
+            --accent-color: #007bff; 
         }
 
         .dark-mode {
@@ -28,10 +28,10 @@
             --card-hover-bg: #3c3c3c;
             --border-color: #444;
             --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-            --icon-default-color: #64b5f6; /* Lighter Blue for Dark Mode */
+            --accent-color: #64b5f6;
         }
 
-        /* Base Styles using variables */
+        /* 1. CURSOR STYLES REMOVED: Restoring default behavior */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             margin: 0; 
@@ -42,7 +42,24 @@
             align-items: center; 
             min-height: 100vh;
             transition: background-color 0.3s;
+            /* Default cursor */
+            cursor: default; 
         }
+        
+        .dark-mode body {
+            /* Default cursor */
+            cursor: default;
+        }
+
+        /* Hover Cursor Styles (Reverted to standard pointer) */
+        .main-card a:hover, .main-card button:hover, .top-right-controls button:hover {
+            cursor: pointer;
+        }
+        .dark-mode .main-card a:hover, .dark-mode .main-card button:hover, .dark-mode .top-right-controls button:hover {
+            cursor: pointer;
+        }
+        /* END CURSOR REMOVAL */
+
         .dashboard-container { 
             width: 90%; 
             max-width: 800px; 
@@ -51,7 +68,6 @@
             position: relative; 
         }
         
-        /* Main Title Style (REVISED) */
         .main-title {
             text-align: center;
             color: var(--text-color);
@@ -63,7 +79,6 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
         }
 
-        /* NEW POSITIONING FOR DARK MODE TOGGLE */
         .top-right-controls {
             position: absolute;
             top: 30px; 
@@ -78,7 +93,6 @@
             border: 1px solid var(--secondary-text);
             padding: 10px 15px;
             border-radius: 10px;
-            cursor: pointer;
             font-size: 1.1em;
             transition: all 0.3s;
         }
@@ -86,7 +100,6 @@
             background-color: var(--secondary-text);
             color: var(--container-bg);
         }
-        /* End NEW POSITIONING */
 
         .main-card {
             background-color: var(--container-bg);
@@ -106,21 +119,30 @@
             text-align: center; 
         }
 
-        /* Adjusted header styling */
+        /* LINE FIXES (Final version) */
         .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             margin-bottom: 0; 
             padding-bottom: 0; 
+            border-bottom: none !important; 
         }
         
-        /* Container for tool section, applies the top border for separation */
-        .tools-section-container {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color); 
+        .separator {
+            border: 0;
+            height: 1px;
+            background-color: var(--border-color);
+            margin-top: 15px; 
+            margin-bottom: 0;
         }
+        
+        .tools-section-container {
+            margin-top: 15px; 
+            padding-top: 0;
+            border-top: none; 
+        }
+        /* END LINE FIXES */
 
         .welcome-text h1 { 
             color: var(--text-color); 
@@ -130,7 +152,7 @@
         
         .login-section { display: flex; align-items: center; gap: 10px; } 
         
-        #loginButton, #logoutButton { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
+        #loginButton, #logoutButton { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; transition: background-color 0.3s; }
         #loginButton:hover, #logoutButton:hover { background-color: #0056b3; }
         #logoutButton { background-color: #dc3545; display: none; }
         .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
@@ -175,18 +197,62 @@
             background-color: var(--card-hover-bg); 
         }
         
-        /* Tool icon color is set via inline style for uniqueness */
         .tool-icon { 
             font-size: 2.5em; 
             margin-bottom: 10px; 
-            /* Base color is now less relevant due to inline styles, but kept for general rule */
-            color: var(--icon-default-color); 
+            color: var(--accent-color); 
         }
         
         .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; color: var(--text-color); }
         .hidden-tool { display: none; }
         
-        /* Easter Egg Modal Style (unchanged) */
+        /* Loader Animation Styles */
+        #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.5s, visibility 0.5s;
+            visibility: visible;
+        }
+
+        #loader-wrapper.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            color: var(--text-color);
+            font-size: 2em;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loader-spinner {
+            border: 6px solid var(--border-color);
+            border-top: 6px solid var(--accent-color); 
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Easter Egg Modal Style */
         #idleModal {
             display: none;
             position: fixed;
@@ -227,10 +293,65 @@
             100% { transform: rotate( 0.0deg) }
         }
 
+        /* MOBILE RESPONSIVENESS */
+        @media (max-width: 600px) {
+            .dashboard-container {
+                width: 100%;
+                padding: 15px; 
+            }
+            .main-title {
+                font-size: 2em; 
+                margin-bottom: 20px;
+            }
+            .main-card {
+                padding: 20px;
+            }
+            .top-right-controls {
+                top: 15px;
+                right: 15px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .welcome-text h1 {
+                font-size: 1.5em;
+            }
+            .login-section {
+                width: 100%;
+                justify-content: space-between;
+            }
+            #loginButton, #logoutButton, #contactLinkHeader {
+                flex-grow: 1;
+                text-align: center;
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+                gap: 15px;
+            }
+            .tool-card {
+                padding: 15px 5px;
+            }
+            .tool-icon {
+                font-size: 2em;
+            }
+            .tool-name {
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 <body>
 
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            Loading Navneet's Tools...
+        </div>
+    </div>
     <div class="dashboard-container">
         
         <div class="top-right-controls">
@@ -246,7 +367,7 @@
                     <h1 id="greeting">Hello!</h1>
                 </div>
                 <div class="login-section">
-                    <a href="https://www.navneet.pro/" target="_blank" id="contactLinkHeader" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block;">
+                    <a href="https://www.navneet.pro/" target="_blank" id="contactLinkHeader" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; text-decoration: none; display: inline-block;">
                         <i class="fas fa-envelope" style="margin-right: 5px;"></i> Contact
                     </a>
                     <button id="loginButton">Login</button>
@@ -254,6 +375,7 @@
                 </div>
             </div>
 
+            <hr class="separator">
             <div class="tools-section-container">
 
                 <h3 class="section-header">Tools by Navneet</h3>
@@ -294,7 +416,7 @@
     <div id="idleModal">
         <h1>Are you there? <span class="waving-hand">👋</span></h1>
         <p id="idleTimer">You've been here for <span id="timeSpent">5:00</span> without moving!</p>
-        <button onclick="document.getElementById('idleModal').style.display = 'none'" style="margin-top: 20px; padding: 10px 30px; border: none; border-radius: 8px; background-color: #007bff; color: white; cursor: pointer; font-size: 0.8em;">I'm back!</button>
+        <button onclick="dismissIdleModal()" style="margin-top: 20px; padding: 10px 30px; border: none; border-radius: 8px; background-color: #007bff; color: white; cursor: pointer; font-size: 0.8em;">I'm back!</button>
     </div>
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -316,16 +438,18 @@
         const loginButton = document.getElementById("loginButton");
         const logoutButton = document.getElementById("logoutButton");
         const greeting = document.getElementById("greeting");
-        const loginMessage = document.getElementById("loginMessage");
         const darkModeToggle = document.getElementById("darkModeToggle");
         const body = document.body;
         const idleModal = document.getElementById('idleModal');
         const timeSpentSpan = document.getElementById('timeSpent');
+        const loaderWrapper = document.getElementById('loader-wrapper');
+
 
         let isLoggedIn = false;
         let idleTimer; 
         let sessionStartTime = Date.now(); 
         let showTimerInterval; 
+        let isModalActive = false; 
 
         // Time constants
         const IDLE_THRESHOLD = 5 * 60 * 1000; 
@@ -346,12 +470,17 @@
             loginButton.style.display = isLoggedIn ? "none" : "block";
             logoutButton.style.display = isLoggedIn ? "block" : "none";
         }
-        updateUI();
         
         // --- Dark Mode Logic ---
+        function isNightTime() {
+            const hour = new Date().getHours();
+            return hour >= 18 || hour < 6;
+        }
+
         function toggleDarkMode() {
             body.classList.toggle('dark-mode');
             const isDark = body.classList.contains('dark-mode');
+            
             if (isDark) {
                 darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('theme', 'dark');
@@ -363,19 +492,36 @@
 
         function loadThemePreference() {
             const savedTheme = localStorage.getItem('theme');
+            
             if (savedTheme === 'dark') {
                 body.classList.add('dark-mode');
                 darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else if (savedTheme === 'light') {
+                body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            } else if (isNightTime()) {
+                body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             } else {
-                 darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
             }
         }
         
         darkModeToggle.addEventListener('click', toggleDarkMode);
-        window.addEventListener('load', loadThemePreference);
+        window.addEventListener('load', () => {
+             // HIDE LOADER
+            setTimeout(() => {
+                loaderWrapper.classList.add('hidden');
+            }, 1500);
+
+            // Load theme and update UI once DOM is ready
+            loadThemePreference();
+            updateUI();
+        });
         // --- End Dark Mode Logic ---
 
-        // --- Login/Logout Logic (Kept for completeness) ---
+        // --- Login/Logout Logic ---
         function handleLogin() {
             const usernameInput = document.getElementById("username").value.trim();
             const passwordInput = document.getElementById("password").value.trim();
@@ -413,12 +559,18 @@
         // --- End Login/Logout Logic ---
         
         // --- Easter Egg Idle Timer Logic ---
+        function dismissIdleModal() {
+            idleModal.style.display = 'none';
+            clearInterval(showTimerInterval);
+            isModalActive = false;
+            resetIdleTimer(); // Restart the 5-minute timer
+        }
+        
         function resetIdleTimer() {
             clearTimeout(idleTimer);
             idleTimer = setTimeout(showIdleModal, IDLE_THRESHOLD);
-            // Hide the modal if it was visible
-            if (idleModal.style.display !== 'none') {
-                idleModal.style.display = 'none';
+            if (idleModal.style.display !== 'none' && !isModalActive) {
+                // If it was visible but not actively triggered, ensure interval is cleared
                 clearInterval(showTimerInterval);
             }
         }
@@ -432,27 +584,34 @@
         
         function showIdleModal() {
             idleModal.style.display = 'flex';
+            isModalActive = true;
             
-            // Start the session timer
             const now = Date.now();
-            
-            // Immediately update the time
             const timeElapsed = now - sessionStartTime;
             timeSpentSpan.textContent = formatTime(timeElapsed);
             
-            // Update the time every second
             showTimerInterval = setInterval(() => {
                 const updatedTimeElapsed = Date.now() - sessionStartTime;
                 timeSpentSpan.textContent = formatTime(updatedTimeElapsed);
             }, ONE_SECOND);
         }
 
-        // Event listeners to reset the timer on user interaction
+        // DISMISS MODAL ON MOUSE/KEY ACTIVITY IF IT'S ACTIVE
+        function handleActivity() {
+            if (isModalActive) {
+                dismissIdleModal();
+            } else {
+                resetIdleTimer();
+            }
+        }
+
         ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'].forEach(eventType => {
-            document.addEventListener(eventType, resetIdleTimer, true);
+            document.addEventListener(eventType, handleActivity, true);
         });
 
-        // Start the initial idle timer
+        // Add dismiss function globally for the button click
+        window.dismissIdleModal = dismissIdleModal;
+
         resetIdleTimer();
         // --- End Idle Timer Logic ---
     </script>
