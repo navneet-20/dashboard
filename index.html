@@ -8,52 +8,48 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <style>
-        /* CSS Variables for easy theme switching - NOW MONOCHROME */
+        /* 1. Monochromatic CSS Variables (Dark Mode is now default) */
         :root {
-            --bg-color: #f0f0f0; /* Light Gray Background */
-            --container-bg: #ffffff; /* Pure White Card */
-            --text-color: #111111; /* Almost Black Text */
+            /* Fallback/Default (Light Mode) */
+            --bg-color: #f0f0f0; 
+            --container-bg: #ffffff;
+            --text-color: #111111;
             --secondary-text: #555555;
-            --card-bg: #f7f7f7; /* Slightly off-white hover/secondary bg */
+            --card-bg: #f7f7f7;
             --card-hover-bg: #e5e5e5;
-            --border-color: #cccccc; /* Light Gray Borders */
+            --border-color: #cccccc;
             --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --accent-color: #111111; /* Black Accent (for primary text/icons) */
-
-            /* CURSOR VARIABLES - Light Mode */
-            --cursor-ball-color: #111111; /* Black Ball */
-            --hover-scale: 4;
-            
-            /* Primary Button (Login/Contact) colors for light mode */
+            --accent-color: #111111;
+            --tool-card-hover-shadow: 0 0 0 2px var(--accent-color); 
+            --cursor-ball-color: #111111;
             --button-bg: #111111;
             --button-text: #ffffff;
             --button-hover-bg: #555555;
-            --button-danger: #333333; /* Dark gray for logout/danger */
+            --button-danger: #333333;
+            --hover-scale: 4;
+            --icon-hover-color: #555555; /* Neutral hover color for light mode icons */
         }
 
-        .dark-mode {
-            --bg-color: #121212; /* Dark Gray Background */
-            --container-bg: #000000; /* Pure Black Card */
-            --text-color: #eeeeee; /* Off-White Text */
+        /* 2. Dark Mode is applied directly to the body */
+        body {
+            /* Inherited from :root */
+            --bg-color: #121212;
+            --container-bg: #000000;
+            --text-color: #eeeeee;
             --secondary-text: #aaaaaa;
-            --card-bg: #1d1d1d; /* Slightly dark secondary bg */
+            --card-bg: #1d1d1d;
             --card-hover-bg: #333333;
-            --border-color: #444444; /* Dark Gray Borders */
+            --border-color: #444444;
             --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
-            --accent-color: #eeeeee; /* White Accent (for primary text/icons) */
-
-            /* CURSOR VARIABLES - Dark Mode */
-            --cursor-ball-color: #ffffff; /* White Ball */
-            
-            /* Primary Button (Login/Contact) colors for dark mode */
+            --accent-color: #eeeeee;
+            --tool-card-hover-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+            --cursor-ball-color: #ffffff;
             --button-bg: #eeeeee;
             --button-text: #111111;
             --button-hover-bg: #aaaaaa;
-            --button-danger: #888888; /* Light gray for logout/danger */
-        }
-
-        /* 2. CUSTOM CURSOR STYLES */
-        body {
+            --button-danger: #888888;
+            --icon-hover-color: #dddddd; /* Lighter hover color for dark mode icons */
+            
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
@@ -63,45 +59,46 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s;
-            /* HIDE DEFAULT CURSOR */
-            cursor: none;
+            cursor: none; 
         }
 
-        /* Reverting explicit cursor pointers on hoverable items because the custom cursor handles visual feedback */
+        /* 3. Light Mode styles (only applied when class is toggled) */
+        .light-mode {
+            --bg-color: #f0f0f0; 
+            --container-bg: #ffffff;
+            --text-color: #111111;
+            --secondary-text: #555555;
+            --card-bg: #f7f7f7;
+            --card-hover-bg: #e5e5e5;
+            --border-color: #cccccc;
+            --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --accent-color: #111111;
+            --tool-card-hover-shadow: 0 0 0 2px var(--accent-color); 
+            --cursor-ball-color: #111111;
+            --button-bg: #111111;
+            --button-text: #ffffff;
+            --button-hover-bg: #555555;
+            --button-danger: #333333;
+            --icon-hover-color: #555555;
+        }
+
+        /* Cursor Styles */
         .main-card a:hover, .main-card button:hover, .top-right-controls button:hover, .hoverable:hover {
-            cursor: none;
+            cursor: none; 
         }
-
-        .cursor {
-            /* Prevents the cursor from interfering with mouse events on the page */
-            pointer-events: none;
-        }
-
+        .cursor { pointer-events: none; }
         .cursor__ball {
             position: fixed;
             top: 0;
             left: 0;
-            /* Makes the cursor visible regardless of background color (blends with opposite color) */
-            mix-blend-mode: difference;
+            mix-blend-mode: difference; 
             z-index: 1000;
-
-            circle {
-                /* Set ball color using CSS variable for theme switching */
-                fill: var(--cursor-ball-color);
-            }
         }
-
-        .cursor__ball--big {
-            height: 30px;
-            width: 30px;
-        }
-
-        .cursor__ball--small {
-            height: 10px;
-            width: 10px;
-        }
-        /* END CUSTOM CURSOR STYLES */
-
+        .cursor__ball circle { fill: var(--cursor-ball-color); }
+        .cursor__ball--big { height: 30px; width: 30px; }
+        .cursor__ball--small { height: 10px; width: 10px; }
+        
+        /* Layout */
         .dashboard-container {
             width: 90%;
             max-width: 800px;
@@ -109,7 +106,6 @@
             transition: all 0.3s ease-in-out;
             position: relative;
         }
-
         .main-title {
             text-align: center;
             color: var(--text-color);
@@ -118,15 +114,14 @@
             margin-bottom: 30px;
             padding-top: 10px;
             padding-bottom: 15px;
-            /* Shadow should match the monochrome theme */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05); 
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
         }
-        /* Update for Dark Mode Title Shadow to be less prominent */
-        .dark-mode .main-title {
+        body .main-title { /* Override title shadow for default dark mode */
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.05);
         }
-
-
+        .light-mode .main-title {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
         .top-right-controls {
             position: absolute;
             top: 30px;
@@ -134,7 +129,7 @@
             z-index: 10;
         }
 
-        /* Dark Mode Toggle Button Style - Now Monochrome */
+        /* Components */
         #darkModeToggle {
             background-color: transparent;
             color: var(--secondary-text);
@@ -148,6 +143,10 @@
             background-color: var(--secondary-text);
             color: var(--container-bg);
         }
+        /* Light Mode Hover for Toggle Icon */
+        .light-mode #darkModeToggle:hover .fas {
+            color: var(--accent-color); 
+        }
 
         .main-card {
             background-color: var(--container-bg);
@@ -156,18 +155,7 @@
             padding: 30px;
             margin-bottom: 25px;
         }
-
-        .section-header {
-            color: var(--text-color);
-            font-size: 1.5em;
-            margin-top: 0;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 1px dashed var(--border-color);
-            text-align: center;
-        }
-
-        /* LINE FIXES (Final version) */
+        /* REMOVED .section-header styles */
         .header {
             display: flex;
             justify-content: space-between;
@@ -176,7 +164,6 @@
             padding-bottom: 0;
             border-bottom: none !important;
         }
-
         .separator {
             border: 0;
             height: 1px;
@@ -184,63 +171,36 @@
             margin-top: 15px;
             margin-bottom: 0;
         }
-
         .tools-section-container {
-            margin-top: 15px;
+            /* Reduced margin top to compensate for removed header */
+            margin-top: 5px; 
             padding-top: 0;
             border-top: none;
         }
-        /* END LINE FIXES */
-
         .welcome-text h1 {
             color: var(--text-color);
             font-size: 1.8em;
             margin: 0;
         }
-
         .login-section { display: flex; align-items: center; gap: 10px; }
 
-        /* MONOCHROME BUTTON STYLES */
-        #loginButton, #logoutButton { 
-            background-color: var(--button-bg); 
-            color: var(--button-text); 
-            border: none; 
-            padding: 10px 15px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            transition: background-color 0.3s; 
+        /* Button Styling */
+        #loginButton, #logoutButton, #contactLinkHeader {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
-        #loginButton:hover, #logoutButton:hover { 
-            background-color: var(--button-hover-bg); 
-        }
-        /* Contact Link Header */
-        #contactLinkHeader {
-             background-color: var(--button-bg) !important; 
-             color: var(--button-text) !important;
-             transition: background-color 0.3s; 
-        }
-        #contactLinkHeader:hover {
+        #loginButton:hover, #logoutButton:hover, #contactLinkHeader:hover {
             background-color: var(--button-hover-bg) !important;
         }
-        #logoutButton { 
-            background-color: var(--button-danger); 
-            display: none; 
-        }
+        #logoutButton { background-color: var(--button-danger); display: none; }
 
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
-        .modal-content { background-color: var(--container-bg); color: var(--text-color); padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
-        .modal-content input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0 15px 0;
-            display: inline-block;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-sizing: border-box;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-        }
-        /* Submit button inside modal */
         .modal-content button { 
             background-color: var(--button-bg); 
             color: var(--button-text); 
@@ -255,6 +215,8 @@
         .modal-content button:hover { background-color: var(--button-hover-bg); }
         .close { color: var(--secondary-text); float: right; font-size: 28px; font-weight: bold; }
         .close:hover, .close:focus { color: var(--text-color); text-decoration: none; cursor: none; }
+        
+        /* Tool Cards */
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -273,137 +235,76 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            box-shadow: 0 0 0 1px var(--border-color);
         }
         .tool-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--tool-card-hover-shadow); 
             background-color: var(--card-hover-bg);
         }
-
-        /* Icon colors now inherit or use --accent-color (black/white) */
         .tool-icon {
             font-size: 2.5em;
             margin-bottom: 10px;
             color: var(--accent-color);
+            transition: color 0.2s; /* Added transition for smooth hover */
+        }
+        /* FIX: Tool Card Icon Color Change on Hover in Light Mode */
+        .light-mode .tool-card:hover .tool-icon {
+            color: var(--icon-hover-color); /* Uses a gray value for visibility */
         }
 
         .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; color: var(--text-color); }
         .hidden-tool { display: none; }
 
-        /* Loader Animation Styles */
-        #loader-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Modal */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .modal-content { 
+            background-color: var(--container-bg); 
+            color: var(--text-color); 
+            padding: 25px; 
+            border-radius: 15px; 
+            width: 300px; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); 
+        }
+        .modal-content input {
             width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 1;
-            transition: opacity 0.5s, visibility 0.5s;
-            visibility: visible;
-        }
-
-        #loader-wrapper.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .loader-content {
-            color: var(--text-color);
-            font-size: 2em;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .loader-spinner {
-            border: 6px solid var(--border-color);
-            border-top: 6px solid var(--accent-color); /* Spinner uses accent color (black/white) */
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Easter Egg Modal Style */
-        #idleModal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            /* Keep background dark for contrast */
-            background-color: rgba(0, 0, 0, 0.8); 
-            justify-content: center;
-            align-items: center;
-            color: white;
-            flex-direction: column;
-            text-align: center;
-            font-size: 2em;
-            animation: fadeIn 0.5s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        #idleModal h1 { margin-bottom: 10px; font-size: 2em; }
-        #idleTimer { font-size: 1.2em; font-weight: normal; }
-        .waving-hand {
+            padding: 10px;
+            margin: 8px 0 15px 0;
             display: inline-block;
-            font-size: 3em;
-            /* Keep wave animation */
-            animation: wave 2s infinite; 
-            transform-origin: 70% 70%;
-        }
-        @keyframes wave {
-            0% { transform: rotate( 0.0deg) }
-            10% { transform: rotate(14.0deg) }
-            20% { transform: rotate(-8.0deg) }
-            30% { transform: rotate(14.0deg) }
-            40% { transform: rotate(-4.0deg) }
-            50% { transform: rotate(10.0deg) }
-            60% { transform: rotate( 0.0deg) }
-            100% { transform: rotate( 0.0deg) }
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            color: var(--text-color);
         }
 
-        /* MOBILE RESPONSIVENESS (kept original) */
+        /* MOBILE RESPONSIVENESS */
         @media (max-width: 600px) {
             .dashboard-container {
                 width: 100%;
                 padding: 15px;
             }
-            .main-title {
-                font-size: 2em;
-                margin-bottom: 20px;
-            }
-            .main-card {
-                padding: 20px;
-            }
-            .top-right-controls {
-                top: 15px;
-                right: 15px;
-            }
+            .main-title { font-size: 2em; margin-bottom: 20px; }
+            .main-card { padding: 20px; }
+            .top-right-controls { top: 15px; right: 15px; }
             .header {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
             }
-            .welcome-text h1 {
-                font-size: 1.5em;
-            }
+            .welcome-text h1 { font-size: 1.5em; }
             .login-section {
                 width: 100%;
                 justify-content: space-between;
@@ -418,23 +319,11 @@
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
                 gap: 15px;
             }
-            .tool-card {
-                padding: 15px 5px;
-            }
-            .tool-icon {
-                font-size: 2em;
-            }
-            .tool-name {
-                font-size: 0.8em;
-            }
-
-            /* Disable custom cursor on mobile to allow natural touch/tap behavior */
-            body {
-                cursor: default;
-            }
-            .cursor {
-                display: none;
-            }
+            .tool-card { padding: 15px 5px; }
+            .tool-icon { font-size: 2em; }
+            .tool-name { font-size: 0.8em; }
+            body { cursor: default; }
+            .cursor { display: none; }
         }
     </style>
 </head>
@@ -446,23 +335,16 @@
           <circle cx="15" cy="15" r="12" stroke-width="0"></circle>
         </svg>
       </div>
-
       <div class="cursor__ball cursor__ball--small">
         <svg height="10" width="10">
           <circle cx="5" cy="5" r="4" stroke-width="0"></circle>
         </svg>
       </div>
     </div>
-    <div id="loader-wrapper">
-        <div class="loader-content">
-            <div class="loader-spinner"></div>
-            Loading Navneet's Tools...
-        </div>
-    </div>
     <div class="dashboard-container">
 
         <div class="top-right-controls">
-            <button id="darkModeToggle" class="hoverable"><i class="fas fa-moon"></i></button>
+            <button id="darkModeToggle" class="hoverable"><i class="fas fa-sun"></i></button>
         </div>
 
         <h1 class="main-title">🛠️ Navneet's Tools</h1>
@@ -474,7 +356,7 @@
                     <h1 id="greeting">Hello!</h1>
                 </div>
                 <div class="login-section">
-                    <a href="https://www.navneet.pro/" target="_blank" id="contactLinkHeader" class="hoverable" style="border: none; padding: 10px 15px; border-radius: 10px; font-weight: bold; text-decoration: none; display: inline-block;">
+                    <a href="https://www.navneet.pro/" target="_blank" id="contactLinkHeader" class="hoverable">
                         <i class="fas fa-envelope" style="margin-right: 5px;"></i> Contact
                     </a>
                     <button id="loginButton" class="hoverable">Login</button>
@@ -484,8 +366,6 @@
 
             <hr class="separator">
             <div class="tools-section-container">
-
-                <h3 class="section-header">Tools by Navneet</h3>
 
                 <div class="tools-grid">
                     <a href="https://navneet-20.github.io/Astro-Dash/" target="_blank" class="tool-card hoverable">
@@ -520,11 +400,6 @@
         </div>
         </div>
 
-    <div id="idleModal">
-        <h1>Are you there? <span class="waving-hand">👋</span></h1>
-        <p id="idleTimer">You've been here for <span id="timeSpent">5:00</span> without moving!</p>
-        <button onclick="dismissIdleModal()" class="hoverable" style="margin-top: 20px; padding: 10px 30px; border: none; border-radius: 8px; background-color: var(--button-bg); color: var(--button-text); cursor: pointer; font-size: 0.8em;">I'm back!</button>
-    </div>
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close hoverable" onclick="document.getElementById('loginModal').style.display='none'">&times;</span>
@@ -547,25 +422,12 @@
         const greeting = document.getElementById("greeting");
         const darkModeToggle = document.getElementById("darkModeToggle");
         const body = document.body;
-        const idleModal = document.getElementById('idleModal');
-        const timeSpentSpan = document.getElementById('timeSpent');
-        const loaderWrapper = document.getElementById('loader-wrapper');
 
-        // CURSOR ELEMENTS
         const $bigBall = document.querySelector('.cursor__ball--big');
         const $smallBall = document.querySelector('.cursor__ball--small');
-        // Select all elements with the 'hoverable' class
         const $hoverables = document.querySelectorAll('.hoverable, .tool-card, #contactLinkHeader, #loginButton, #logoutButton, #darkModeToggle, .close'); 
 
         let isLoggedIn = false;
-        let idleTimer;
-        let sessionStartTime = Date.now();
-        let showTimerInterval;
-        let isModalActive = false;
-
-        // Time constants
-        const IDLE_THRESHOLD = 5 * 60 * 1000;
-        const ONE_SECOND = 1000;
 
         // --- Core Functions ---
         function setGreeting() {
@@ -575,7 +437,6 @@
                 hour < 18 ? "Good Afternoon!" :
                 "Good Evening!";
         }
-        setGreeting();
 
         function updateUI() {
             hiddenTool.style.display = isLoggedIn ? "flex" : "none";
@@ -583,16 +444,10 @@
             logoutButton.style.display = isLoggedIn ? "block" : "none";
         }
 
-        // --- Dark Mode Logic ---
-        function isNightTime() {
-            const hour = new Date().getHours();
-            return hour >= 18 || hour < 6;
-        }
-
+        // --- Dark Mode Logic (Dark Mode Default) ---
         function toggleDarkMode() {
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-
+            const isDark = !body.classList.toggle('light-mode');
+            
             if (isDark) {
                 darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 localStorage.setItem('theme', 'dark');
@@ -604,39 +459,20 @@
 
         function loadThemePreference() {
             const savedTheme = localStorage.getItem('theme');
-
-            if (savedTheme === 'dark') {
-                body.classList.add('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else if (savedTheme === 'light') {
-                body.classList.remove('dark-mode');
+            
+            if (savedTheme === 'light') {
+                body.classList.add('light-mode');
                 darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            } else if (isNightTime()) {
-                body.classList.add('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             } else {
-                body.classList.remove('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
         }
-
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-        window.addEventListener('load', () => {
-             // HIDE LOADER
-            setTimeout(() => {
-                loaderWrapper.classList.add('hidden');
-            }, 1500);
-
-            // Load theme and update UI once DOM is ready
-            loadThemePreference();
-            updateUI();
-        });
-        // --- End Dark Mode Logic ---
-
-        // --- Login/Logout Logic (Kept original logic) ---
+        
+        // --- Login/Logout Logic ---
         function handleLogin() {
             const usernameInput = document.getElementById("username").value.trim();
             const passwordInput = document.getElementById("password").value.trim();
+            const loginMessage = document.getElementById("loginMessage");
             loginMessage.textContent = "Verifying...";
             const encodedInput = btoa(passwordInput);
 
@@ -654,112 +490,47 @@
             isLoggedIn = false;
             updateUI();
         }
-
-        loginButton.addEventListener("click", () => {
-            loginModal.style.display = "flex";
-            loginMessage.textContent = "";
-        });
-
-        logoutButton.addEventListener("click", handleLogout);
-
-        window.addEventListener("click", (event) => {
-            if (event.target === loginModal) {
-                loginModal.style.display = "none";
-                loginMessage.textContent = "";
-            }
-        });
-        // --- End Login/Logout Logic ---
-
-        // --- Easter Egg Idle Timer Logic (Kept original logic) ---
-        function dismissIdleModal() {
-            idleModal.style.display = 'none';
-            clearInterval(showTimerInterval);
-            isModalActive = false;
-            resetIdleTimer(); // Restart the 5-minute timer
+        
+        // --- Cursor Logic ---
+        function onMouseMove(e) {
+            gsap.to($bigBall, 0.4, { x: e.pageX - 15, y: e.pageY - 15 });
+            gsap.to($smallBall, 0.1, { x: e.pageX - 5, y: e.pageY - 5 });
         }
 
-        function resetIdleTimer() {
-            clearTimeout(idleTimer);
-            idleTimer = setTimeout(showIdleModal, IDLE_THRESHOLD);
-            if (idleModal.style.display !== 'none' && !isModalActive) {
-                // If it was visible but not actively triggered, ensure interval is cleared
-                clearInterval(showTimerInterval);
-            }
-        }
-
-        function formatTime(ms) {
-            const totalSeconds = Math.floor(ms / ONE_SECOND);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
-        function showIdleModal() {
-            idleModal.style.display = 'flex';
-            isModalActive = true;
-
-            const now = Date.now();
-            const timeElapsed = now - sessionStartTime;
-            timeSpentSpan.textContent = formatTime(timeElapsed);
-
-            showTimerInterval = setInterval(() => {
-                const updatedTimeElapsed = Date.now() - sessionStartTime;
-                timeSpentSpan.textContent = formatTime(updatedTimeElapsed);
-            }, ONE_SECOND);
-        }
-
-        // DISMISS MODAL ON MOUSE/KEY ACTIVITY IF IT'S ACTIVE
-        function handleActivity() {
-            if (isModalActive) {
-                dismissIdleModal();
-            } else {
-                resetIdleTimer();
-            }
-        }
-
-        ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'].forEach(eventType => {
-            document.addEventListener(eventType, handleActivity, true);
-        });
-
-        // Add dismiss function globally for the button click
-        window.dismissIdleModal = dismissIdleModal;
-
-        resetIdleTimer();
-        // --- End Idle Timer Logic ---
-
-        // CURSOR MOVEMENT AND HOVER LOGIC 
-        // Move the cursor
-        document.body.addEventListener('mousemove', (e) => {
-            // GSAP 3 syntax: gsap.to(element, {duration: time, properties...})
-            gsap.to($bigBall, 0.4, {
-                x: e.pageX - 15, // Center the ball (30px diameter, so -15)
-                y: e.pageY - 15
-            });
-            gsap.to($smallBall, 0.1, {
-                x: e.pageX - 5, // Center the ball (10px diameter, so -5)
-                y: e.pageY - 5
-            });
-        });
-
-        // Hover an element
         function onMouseHover() {
-            gsap.to($bigBall, 0.3, {
-                scale: 4 // Scale factor from your original request
-            });
+            gsap.to($bigBall, 0.3, { scale: 4 });
         }
 
         function onMouseHoverOut() {
-            gsap.to($bigBall, 0.3, {
-                scale: 1
-            });
+            gsap.to($bigBall, 0.3, { scale: 1 });
         }
-
-        // Attach listeners to hoverable elements
+        
+        // --- Initialization ---
+        
+        // Attach Event Listeners
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        loginButton.addEventListener("click", () => {
+            loginModal.style.display = "flex";
+            document.getElementById("loginMessage").textContent = "";
+        });
+        logoutButton.addEventListener("click", handleLogout);
+        window.addEventListener("click", (event) => {
+            if (event.target === loginModal) {
+                loginModal.style.display = "none";
+                document.getElementById("loginMessage").textContent = "";
+            }
+        });
+        
+        document.body.addEventListener('mousemove', onMouseMove);
         $hoverables.forEach(el => {
             el.addEventListener('mouseenter', onMouseHover);
             el.addEventListener('mouseleave', onMouseHoverOut);
         });
-        // --- End Cursor Logic ---
+
+        // Initial Calls
+        setGreeting();
+        loadThemePreference();
+        updateUI();
     </script>
 </body>
 </html>
