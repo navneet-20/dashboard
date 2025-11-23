@@ -6,67 +6,296 @@
     <title>Navneet's Tools Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* (CSS STYLES OMITTED FOR BREVITY) */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .dashboard-container { width: 90%; max-width: 800px; background-color: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); padding: 30px; transition: all 0.3s ease-in-out; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        .welcome-text h1 { color: #333; font-size: 2.5em; margin: 0; }
-        .welcome-text h2 { color: #555; font-size: 1.2em; font-weight: 300; margin: 5px 0 0 0; }
-        .login-section { display: flex; align-items: center; }
+        /* CSS Variables for easy theme switching */
+        :root {
+            --bg-color: #f0f2f5;
+            --container-bg: #ffffff;
+            --text-color: #333;
+            --secondary-text: #555;
+            --card-bg: #f7f9fc;
+            --card-hover-bg: #e6f0ff;
+            --border-color: #eee;
+            --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --icon-default-color: #007bff; /* Fallback/Default Blue */
+        }
+
+        .dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --secondary-text: #b0b0b0;
+            --card-bg: #2d2d2d;
+            --card-hover-bg: #3c3c3c;
+            --border-color: #444;
+            --main-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            --icon-default-color: #64b5f6; /* Lighter Blue for Dark Mode */
+        }
+
+        /* Base Styles using variables */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: var(--bg-color); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            transition: background-color 0.3s;
+        }
+        .dashboard-container { 
+            width: 90%; 
+            max-width: 800px; 
+            padding: 30px; 
+            transition: all 0.3s ease-in-out;
+            position: relative; 
+        }
+        
+        /* Main Title Style (REVISED) */
+        .main-title {
+            text-align: center;
+            color: var(--text-color);
+            font-size: 3em; 
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding-top: 10px; 
+            padding-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* NEW POSITIONING FOR DARK MODE TOGGLE */
+        .top-right-controls {
+            position: absolute;
+            top: 30px; 
+            right: 30px; 
+            z-index: 10;
+        }
+
+        /* Dark Mode Toggle Button Style */
+        #darkModeToggle {
+            background-color: transparent;
+            color: var(--secondary-text);
+            border: 1px solid var(--secondary-text);
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        #darkModeToggle:hover {
+            background-color: var(--secondary-text);
+            color: var(--container-bg);
+        }
+        /* End NEW POSITIONING */
+
+        .main-card {
+            background-color: var(--container-bg);
+            border-radius: 20px;
+            box-shadow: var(--main-card-shadow);
+            padding: 30px;
+            margin-bottom: 25px; 
+        }
+
+        .section-header {
+            color: var(--text-color);
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+            text-align: center; 
+        }
+
+        /* Adjusted header styling */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 0; 
+            padding-bottom: 0; 
+        }
+        
+        /* Container for tool section, applies the top border for separation */
+        .tools-section-container {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color); 
+        }
+
+        .welcome-text h1 { 
+            color: var(--text-color); 
+            font-size: 1.8em; 
+            margin: 0; 
+        }
+        
+        .login-section { display: flex; align-items: center; gap: 10px; } 
+        
         #loginButton, #logoutButton { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; }
         #loginButton:hover, #logoutButton:hover { background-color: #0056b3; }
         #logoutButton { background-color: #dc3545; display: none; }
         .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); justify-content: center; align-items: center; }
-        .modal-content { background-color: #fff; padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
-        .modal-content input { width: 100%; padding: 10px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .modal-content { background-color: var(--container-bg); color: var(--text-color); padding: 25px; border-radius: 15px; width: 300px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); }
+        .modal-content input { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 8px 0 15px 0; 
+            display: inline-block; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
         .modal-content button { background-color: #28a745; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; transition: background-color 0.3s; }
         .modal-content button:hover { background-color: #1e7e34; }
-        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
-        .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 20px; padding-top: 10px; }
-        .tool-card { background-color: #f7f9fc; padding: 20px 10px; text-align: center; border-radius: 15px; text-decoration: none; color: #333; transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); background-color: #e6f0ff; }
-        .tool-icon { font-size: 2.5em; margin-bottom: 10px; color: #007bff; }
-        .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; }
+        .close { color: var(--secondary-text); float: right; font-size: 28px; font-weight: bold; }
+        .close:hover, .close:focus { color: var(--text-color); text-decoration: none; cursor: pointer; }
+        .tools-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+            gap: 20px; 
+            padding-top: 10px; 
+        }
+        .tool-card { 
+            background-color: var(--card-bg); 
+            padding: 20px 10px; 
+            text-align: center; 
+            border-radius: 15px; 
+            text-decoration: none; 
+            color: var(--text-color); 
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        .tool-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); 
+            background-color: var(--card-hover-bg); 
+        }
+        
+        /* Tool icon color is set via inline style for uniqueness */
+        .tool-icon { 
+            font-size: 2.5em; 
+            margin-bottom: 10px; 
+            /* Base color is now less relevant due to inline styles, but kept for general rule */
+            color: var(--icon-default-color); 
+        }
+        
+        .tool-name { font-size: 0.9em; font-weight: 600; word-wrap: break-word; color: var(--text-color); }
         .hidden-tool { display: none; }
+        
+        /* Easter Egg Modal Style (unchanged) */
+        #idleModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            color: white;
+            flex-direction: column;
+            text-align: center;
+            font-size: 2em;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #idleModal h1 { margin-bottom: 10px; font-size: 2em; }
+        #idleTimer { font-size: 1.2em; font-weight: normal; }
+        .waving-hand { 
+            display: inline-block; 
+            font-size: 3em; 
+            animation: wave 2s infinite; 
+            transform-origin: 70% 70%; 
+        }
+        @keyframes wave {
+            0% { transform: rotate( 0.0deg) }
+            10% { transform: rotate(14.0deg) }
+            20% { transform: rotate(-8.0deg) }
+            30% { transform: rotate(14.0deg) }
+            40% { transform: rotate(-4.0deg) }
+            50% { transform: rotate(10.0deg) }
+            60% { transform: rotate( 0.0deg) }
+            100% { transform: rotate( 0.0deg) }
+        }
+
     </style>
 </head>
 <body>
 
     <div class="dashboard-container">
-        <div class="header">
-            <div class="welcome-text">
-                <h1 id="greeting">Hello!</h1>
-                <h2>Tools by Navneet</h2>
-            </div>
-            <div class="login-section">
-                <button id="loginButton">Login</button>
-                <button id="logoutButton">Logout</button>
-            </div>
+        
+        <div class="top-right-controls">
+            <button id="darkModeToggle"><i class="fas fa-moon"></i></button>
         </div>
+        
+        <h1 class="main-title">🛠️ Navneet's Tools</h1>
+        
+        <div class="main-card">
+            
+            <div class="header">
+                <div class="welcome-text">
+                    <h1 id="greeting">Hello!</h1>
+                </div>
+                <div class="login-section">
+                    <a href="https://www.navneet.pro/" target="_blank" id="contactLinkHeader" style="background-color: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block;">
+                        <i class="fas fa-envelope" style="margin-right: 5px;"></i> Contact
+                    </a>
+                    <button id="loginButton">Login</button>
+                    <button id="logoutButton">Logout</button>
+                </div>
+            </div>
 
-        <div class="tools-grid">
-            <a href="https://navneet-20.github.io/Astro-Dash/" target="_blank" class="tool-card">
-                <i class="fas fa-rocket tool-icon"></i><span class="tool-name">Astro-Dash Game</span>
-            </a>
-            <a href="https://navneet-20.github.io/screen-saver-studio/" target="_blank" class="tool-card">
-                <i class="fas fa-paint-brush tool-icon"></i><span class="tool-name">screen-saver-studio</span>
-            </a>
-            <a href="https://navneet-20.github.io/ice-breaker/" target="_blank" class="tool-card">
-                <i class="fas fa-user-friends tool-icon"></i><span class="tool-name">ice-breaker</span>
-            </a>
-            <a href="https://navneet-20.github.io/home-loan-calculator-with-repo-rate/" target="_blank" class="tool-card">
-                <i class="fas fa-hand-holding-usd tool-icon"></i><span class="tool-name">Home Loan Calc (Repo)</span>
-            </a>
-            <a href="https://navneet-20.github.io/home-loan-calculator-with-prepayment/" target="_blank" class="tool-card">
-                <i class="fas fa-house-user tool-icon"></i><span class="tool-name">Home Loan Calc (Prepay)</span>
-            </a>
-            <a href="https://navneet-20.github.io/happybirthday/" target="_blank" class="tool-card hidden-tool" id="hiddenTool">
-                <i class="fas fa-birthday-cake tool-icon" style="color: #ff69b4;"></i><span class="tool-name">Happy Birthday</span>
-            </a>
+            <div class="tools-section-container">
+
+                <h3 class="section-header">Tools by Navneet</h3>
+
+                <div class="tools-grid">
+                    <a href="https://navneet-20.github.io/Astro-Dash/" target="_blank" class="tool-card">
+                        <i class="fas fa-rocket tool-icon" style="color: #ff7f50;"></i><span class="tool-name">Astro-Dash Game</span>
+                    </a>
+                    <a href="https://navneet-20.github.io/screen-saver-studio/" target="_blank" class="tool-card">
+                        <i class="fas fa-paint-brush tool-icon" style="color: #8a2be2;"></i><span class="tool-name">screen-saver-studio</span>
+                    </a>
+                    <a href="https://navneet-20.github.io/ice-breaker/" target="_blank" class="tool-card">
+                        <i class="fas fa-user-friends tool-icon" style="color: #00ced1;"></i><span class="tool-name">ice-breaker</span>
+                    </a>
+                    <a href="https://navneet-20.github.io/home-loan-calculator-with-repo-rate/" target="_blank" class="tool-card">
+                        <i class="fas fa-hand-holding-usd tool-icon" style="color: #ffd700;"></i><span class="tool-name">Home Loan Calc (Repo)</span>
+                    </a>
+                    <a href="https://navneet-20.github.io/home-loan-calculator-with-prepayment/" target="_blank" class="tool-card">
+                        <i class="fas fa-house-user tool-icon" style="color: #2e8b57;"></i><span class="tool-name">Home Loan Calc (Prepay)</span>
+                    </a>
+                    <a href="https://navneet-20.github.io/Math-Sprint/" target="_blank" class="tool-card">
+                        <i class="fas fa-calculator tool-icon" style="color: #dc3545;"></i><span class="tool-name">Math Sprint</span>
+                    </a>
+                    <a href="https://navneet-20.github.io/happybirthday/" target="_blank" class="tool-card hidden-tool" id="hiddenTool">
+                        <i class="fas fa-birthday-cake tool-icon" style="color: #ff69b4;"></i><span class="tool-name">Happy Birthday</span>
+                    </a>
+                </div>
+
+            </div> </div>
+        
+        <div class="main-card external-tools-card">
+            <h3 class="section-header">🌐 External Tools & Resources</h3>
+            <div class="tools-grid">
+                </div>
         </div>
+        </div>
+    
+    <div id="idleModal">
+        <h1>Are you there? <span class="waving-hand">👋</span></h1>
+        <p id="idleTimer">You've been here for <span id="timeSpent">5:00</span> without moving!</p>
+        <button onclick="document.getElementById('idleModal').style.display = 'none'" style="margin-top: 20px; padding: 10px 30px; border: none; border-radius: 8px; background-color: #007bff; color: white; cursor: pointer; font-size: 0.8em;">I'm back!</button>
     </div>
-
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="document.getElementById('loginModal').style.display='none'">&times;</span>
@@ -80,8 +309,6 @@
 
     <script>
         const CORRECT_USERNAME = "navneet.kumar";
-        
-        
         const ENCODED_PASS = "aDJpeGRu";
 
         const hiddenTool = document.getElementById("hiddenTool");
@@ -90,9 +317,21 @@
         const logoutButton = document.getElementById("logoutButton");
         const greeting = document.getElementById("greeting");
         const loginMessage = document.getElementById("loginMessage");
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        const body = document.body;
+        const idleModal = document.getElementById('idleModal');
+        const timeSpentSpan = document.getElementById('timeSpent');
 
         let isLoggedIn = false;
+        let idleTimer; 
+        let sessionStartTime = Date.now(); 
+        let showTimerInterval; 
 
+        // Time constants
+        const IDLE_THRESHOLD = 5 * 60 * 1000; 
+        const ONE_SECOND = 1000;
+
+        // --- Core Functions ---
         function setGreeting() {
             const hour = new Date().getHours();
             greeting.textContent =
@@ -107,13 +346,40 @@
             loginButton.style.display = isLoggedIn ? "none" : "block";
             logoutButton.style.display = isLoggedIn ? "block" : "none";
         }
+        updateUI();
+        
+        // --- Dark Mode Logic ---
+        function toggleDarkMode() {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            if (isDark) {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        }
 
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                 darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        }
+        
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        window.addEventListener('load', loadThemePreference);
+        // --- End Dark Mode Logic ---
+
+        // --- Login/Logout Logic (Kept for completeness) ---
         function handleLogin() {
             const usernameInput = document.getElementById("username").value.trim();
             const passwordInput = document.getElementById("password").value.trim();
-
             loginMessage.textContent = "Verifying...";
-
             const encodedInput = btoa(passwordInput);
 
             if (usernameInput === CORRECT_USERNAME && encodedInput === ENCODED_PASS) {
@@ -144,8 +410,51 @@
                 loginMessage.textContent = "";
             }
         });
+        // --- End Login/Logout Logic ---
+        
+        // --- Easter Egg Idle Timer Logic ---
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(showIdleModal, IDLE_THRESHOLD);
+            // Hide the modal if it was visible
+            if (idleModal.style.display !== 'none') {
+                idleModal.style.display = 'none';
+                clearInterval(showTimerInterval);
+            }
+        }
 
-        updateUI();
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / ONE_SECOND);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+        
+        function showIdleModal() {
+            idleModal.style.display = 'flex';
+            
+            // Start the session timer
+            const now = Date.now();
+            
+            // Immediately update the time
+            const timeElapsed = now - sessionStartTime;
+            timeSpentSpan.textContent = formatTime(timeElapsed);
+            
+            // Update the time every second
+            showTimerInterval = setInterval(() => {
+                const updatedTimeElapsed = Date.now() - sessionStartTime;
+                timeSpentSpan.textContent = formatTime(updatedTimeElapsed);
+            }, ONE_SECOND);
+        }
+
+        // Event listeners to reset the timer on user interaction
+        ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'].forEach(eventType => {
+            document.addEventListener(eventType, resetIdleTimer, true);
+        });
+
+        // Start the initial idle timer
+        resetIdleTimer();
+        // --- End Idle Timer Logic ---
     </script>
 </body>
 </html>
