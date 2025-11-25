@@ -368,6 +368,9 @@
             <div class="tools-section-container">
 
                 <div class="tools-grid">
+                    <a href="https://navneet-20.github.io/sleep/" target="_blank" class="tool-card hoverable">
+                        <i class="fas fa-cloud-moon tool-icon"></i><span class="tool-name">White Noise (Sleep)</span>
+                    </a>
                     <a href="https://navneet-20.github.io/Astro-Dash/" target="_blank" class="tool-card hoverable">
                         <i class="fas fa-rocket tool-icon"></i><span class="tool-name">Astro-Dash Game</span>
                     </a>
@@ -413,6 +416,7 @@
 
     <script>
         const CORRECT_USERNAME = "navneet.kumar";
+        // Final, most compatible password check: Base64 encoding for obscurity (h2ixdn -> aDJpeGRu)
         const ENCODED_PASS = "aDJpeGRu";
 
         const hiddenTool = document.getElementById("hiddenTool");
@@ -444,7 +448,7 @@
             logoutButton.style.display = isLoggedIn ? "block" : "none";
         }
 
-        // --- Dark Mode Logic (Dark Mode Default) ---
+        // --- Dark Mode Logic ---
         function toggleDarkMode() {
             const isDark = !body.classList.toggle('light-mode');
             
@@ -474,7 +478,16 @@
             const passwordInput = document.getElementById("password").value.trim();
             const loginMessage = document.getElementById("loginMessage");
             loginMessage.textContent = "Verifying...";
-            const encodedInput = btoa(passwordInput);
+            
+            // Encode the user's input password using built-in Base64 encoding (compatible across all browsers)
+            let encodedInput;
+            try {
+                encodedInput = btoa(passwordInput);
+            } catch (e) {
+                // Should not happen, but kept for absolute safety
+                loginMessage.textContent = "An encoding error occurred.";
+                return;
+            }
 
             if (usernameInput === CORRECT_USERNAME && encodedInput === ENCODED_PASS) {
                 isLoggedIn = true;
@@ -491,7 +504,7 @@
             updateUI();
         }
         
-        // --- Cursor Logic ---
+        // --- Cursor Logic (Requires GSAP) ---
         function onMouseMove(e) {
             gsap.to($bigBall, 0.4, { x: e.pageX - 15, y: e.pageY - 15 });
             gsap.to($smallBall, 0.1, { x: e.pageX - 5, y: e.pageY - 5 });
